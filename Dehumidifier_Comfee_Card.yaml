@@ -1,38 +1,29 @@
-########################
-#### Lovelace Card #####
-########################
-
 type: vertical-stack
-title: "Dehumidifier Suite \U0001F4A6"
 cards:
   - type: entities
     show_header_toggle: false
     entities:
-      - entity: humidifier.dehumidifier_suite
+      - entity: humidifier.entfeuchter_c4c4
         toggle: false
         type: custom:multiple-entity-row
-        name: Humidity
+        name: Luftfeuchtigkeit
         icon: mdi:water-percent
-        state_header: State
+        state_header: Status
         entities:
           - attribute: humidity
-            name: Target
-            unit: '%'
-          - entity: sensor.dehumidifier_suite_humidity
-            name: Current
-      - entity: binary_sensor.dehumidifier_suite_defrosting
+            name: Ziel
+            unit: "%"
+          - entity: sensor.entfeuchter_c4c4_humidity
+            name: Aktuell
+      - entity: fan.entfeuchter_c4c4_fan
         toggle: false
         type: custom:multiple-entity-row
         name: Status
         icon: mdi:format-list-bulleted-type
-        state_header: Defrosting
+        state_header: Lüfter
         entities:
-          - entity: sensor.dehumidifier_suite_temperature
-            name: Temperature
-    header:
-      type: picture
-      image: >-
-        https://www.vazamentos.info/wp-content/uploads/2019/06/Como-acabar-com-a-condensacao.jpg
+          - entity: sensor.entfeuchter_c4c4_temperature
+            name: Temperatur
   - type: horizontal-stack
     cards:
       - type: custom:button-card
@@ -40,16 +31,16 @@ cards:
           action: call-service
           service: humidifier.toggle
           service_data:
-            entity_id: humidifier.dehumidifier_suite
-        entity_id: humidifier.dehumidifier_suite
-        entity: humidifier.dehumidifier_suite
+            entity_id: humidifier.entfeuchter_c4c4
+        entity_id: humidifier.entfeuchter_c4c4
+        entity: humidifier.entfeuchter_c4c4
         extra_styles: |
           @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
             40% { transform: translateX(-15px); }
             60% { transform: translateX(-10px); }
           }
-        name: Dehumidifier
+        name: Entfeuchter
         icon: mdi:air-humidifier
         show_state: true
         show_icon: true
@@ -58,7 +49,7 @@ cards:
           card:
             - background-color: red
         state:
-          - value: 'on'
+          - value: "on"
             icon: mdi:tailwind
             styles:
               card:
@@ -68,14 +59,14 @@ cards:
                 - color: white
                 - animation: bounce 2s infinite
       - type: custom:button-card
-        entity: binary_sensor.dehumidifier_suite_tank_full
-        name: Empty
+        entity: binary_sensor.entfeuchter_c4c4_tank_full
+        name: Wasserbehälter
         show_icon: true
         show_name: true
         state:
-          - value: 'on'
+          - value: "on"
             icon: mdi:beaker-alert
-            name: Full
+            name: Voll
             styles:
               card:
                 - background-color: orange
@@ -83,18 +74,18 @@ cards:
           - operator: default
             icon: mdi:beaker-outline
       - type: custom:button-card
-        entity: fan.dehumidifier_suite_fan
+        entity: fan.entfeuchter_c4c4_fan
         show_icon: true
         show_name: true
         state:
           - operator: template
             value: |
               [[[
-               return (states['fan.dehumidifier_suite_fan'].attributes.preset_mode === 'High' ) && states['humidifier.dehumidifier_suite'].state === 'on'
+               return (states['fan.entfeuchter_c4c4_fan'].attributes.preset_mode === 'High' ) && states['humidifier.entfeuchter_c4c4'].state === 'on'
               ]]]
             icon: mdi:fan
             color: yellow
-            name: Turbo
+            name: Hoch
             styles:
               icon:
                 - animation:
@@ -104,11 +95,11 @@ cards:
           - operator: template
             value: |
               [[[
-               return (states['fan.dehumidifier_suite_fan'].attributes.preset_mode === 'Medium' ) && states['humidifier.dehumidifier_suite'].state === 'on'
+               return (states['fan.entfeuchter_c4c4_fan'].attributes.preset_mode === 'Medium' ) && states['humidifier.entfeuchter_c4c4'].state === 'on'
               ]]]
             icon: mdi:fan
             color: yellow
-            name: Medium
+            name: Mittel
             styles:
               icon:
                 - animation:
@@ -118,11 +109,11 @@ cards:
           - operator: template
             value: |
               [[[
-               return (states['fan.dehumidifier_suite_fan'].attributes.preset_mode === 'Low' ) && states['humidifier.dehumidifier_suite'].state === 'on'
+               return (states['fan.entfeuchter_c4c4_fan'].attributes.preset_mode === 'Low' ) && states['humidifier.entfeuchter_c4c4'].state === 'on'
               ]]]
             icon: mdi:fan
             color: yellow
-            name: Low
+            name: Niedrig
             styles:
               icon:
                 - animation:
@@ -132,37 +123,35 @@ cards:
           - operator: default
             icon: mdi:fan
             color: white
-            name: "Off"
+            name: Aus
   - type: entities
     show_header_toggle: false
     entities:
       - type: custom:text-divider-row
-        text: Select Mode
+        text: Modus wählen
       - type: custom:paper-buttons-row
         buttons:
           - tap_action:
               action: call-service
               service: humidifier.set_mode
               service_data:
-                entity_id: humidifier.dehumidifier_suite
+                entity_id: humidifier.entfeuchter_c4c4
                 mode: Set
             icon: mdi:water-percent
             layout: icon_name
-            name: Target
+            name: Ziel
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Set' ) and  is_state('humidifier.dehumidifier_suite', 'on')
-                  %}
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Set' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Set' ) and  is_state('humidifier.dehumidifier_suite', 'on')
-                  %}
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Set' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                    white
                   {% else%}
                     
@@ -174,23 +163,23 @@ cards:
               action: call-service
               service: humidifier.set_mode
               service_data:
-                entity_id: humidifier.dehumidifier_suite
+                entity_id: humidifier.entfeuchter_c4c4
                 mode: Smart
             layout: icon_name
             name: Smart
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Smart' ) and  is_state('humidifier.dehumidifier_suite', 'on')
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Smart' ) and  is_state('humidifier.entfeuchter_c4c4', 'on')
                   %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Smart' ) and  is_state('humidifier.dehumidifier_suite', 'on')
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Smart' ) and  is_state('humidifier.entfeuchter_c4c4', 'on')
                   %}
                     white
                   {% else%}
@@ -199,27 +188,27 @@ cards:
                 border-radius: 10px
                 opacity: 1
           - icon: mdi:autorenew
-            name: Continuous
+            name: Kontinuierlich
             layout: icon_name
             tap_action:
               action: call-service
               service: humidifier.set_mode
               service_data:
-                entity_id: humidifier.dehumidifier_suite
+                entity_id: humidifier.entfeuchter_c4c4
                 mode: Continuous
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Continuous' ) and  is_state('humidifier.dehumidifier_suite',
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Continuous' ) and  is_state('humidifier.entfeuchter_c4c4',
                   'on') %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Continuous' ) and  is_state('humidifier.dehumidifier_suite',
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Continuous' ) and  is_state('humidifier.entfeuchter_c4c4',
                   'on') %}
                     white
                   {% else%}
@@ -228,28 +217,26 @@ cards:
                 border-radius: 10px
                 opacity: 1
           - icon: mdi:tshirt-crew
-            name: Dryer
+            name: Trockner
             layout: icon_name
             tap_action:
               action: call-service
               service: humidifier.set_mode
               service_data:
-                entity_id: humidifier.dehumidifier_suite
+                entity_id: humidifier.entfeuchter_c4c4
                 mode: Dry
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Dry' ) and  is_state('humidifier.dehumidifier_suite', 'on')
-                  %}
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Dry' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('humidifier.dehumidifier_suite', 'mode',
-                  'Dry' ) and  is_state('humidifier.dehumidifier_suite', 'on')
-                  %}
+                  {% if is_state_attr('humidifier.entfeuchter_c4c4', 'mode',
+                  'Dry' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     white
                   {% else%}
                     
@@ -257,32 +244,30 @@ cards:
                 border-radius: 10px
                 opacity: 1
       - type: custom:text-divider-row
-        text: Select Fan Speed
+        text: Lüftergeschwindigkeit wählen
       - type: custom:paper-buttons-row
         buttons:
           - icon: mdi:fan-speed-1
-            name: Low
+            name: Niedrig
             layout: icon_name
             tap_action:
               action: call-service
               service: fan.set_preset_mode
               service_data:
-                entity_id: fan.dehumidifier_suite_fan
+                entity_id: fan.entfeuchter_c4c4_fan
                 preset_mode: Low
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('fan.dehumidifier_suite_fan',
-                  'preset_mode', 'Low' ) and 
-                  is_state('humidifier.dehumidifier_suite', 'on') %}
+                  {% if is_state_attr('fan.entfeuchter_c4c4_fan', 'preset_mode',
+                  'Low' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('fan.dehumidifier_suite_fan',
-                  'preset_mode', 'Low' ) and 
-                  is_state('humidifier.dehumidifier_suite', 'on') %}
+                  {% if is_state_attr('fan.entfeuchter_c4c4_fan', 'preset_mode',
+                  'Low' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     white
                   {% else%}
                     
@@ -290,28 +275,28 @@ cards:
                 border-radius: 10px
                 opacity: 1
           - icon: mdi:fan-speed-2
-            name: Medium
+            name: Mittel
             layout: icon_name
             tap_action:
               action: call-service
               service: fan.set_preset_mode
               service_data:
-                entity_id: fan.dehumidifier_suite_fan
+                entity_id: fan.entfeuchter_c4c4_fan
                 preset_mode: Medium
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('fan.dehumidifier_suite_fan',
-                  'preset_mode', 'Medium' ) and 
-                  is_state('humidifier.dehumidifier_suite', 'on') %}
+                  {% if is_state_attr('fan.entfeuchter_c4c4_fan', 'preset_mode',
+                  'Medium' ) and  is_state('humidifier.entfeuchter_c4c4', 'on')
+                  %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('fan.dehumidifier_suite_fan',
-                  'preset_mode', 'Medium' ) and 
-                  is_state('humidifier.dehumidifier_suite', 'on') %}
+                  {% if is_state_attr('fan.entfeuchter_c4c4_fan', 'preset_mode',
+                  'Medium' ) and  is_state('humidifier.entfeuchter_c4c4', 'on')
+                  %}
                     white
                   {% else%}
                     
@@ -319,28 +304,26 @@ cards:
                 border-radius: 10px
                 opacity: 1
           - icon: mdi:fan-speed-3
-            name: High
+            name: Hoch
             layout: icon_name
             tap_action:
               action: call-service
               service: fan.set_preset_mode
               service_data:
-                entity_id: fan.dehumidifier_suite_fan
+                entity_id: fan.entfeuchter_c4c4_fan
                 preset_mode: High
             style:
               button:
                 background-color: >
-                  {% if is_state_attr('fan.dehumidifier_suite_fan',
-                  'preset_mode', 'High' ) and 
-                  is_state('humidifier.dehumidifier_suite', 'on') %}
+                  {% if is_state_attr('fan.entfeuchter_c4c4_fan', 'preset_mode',
+                  'High' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     limegreen
                   {% else%}
                     
                   {% endif %}
                 color: >
-                  {% if is_state_attr('fan.dehumidifier_suite_fan',
-                  'preset_mode', 'High' ) and 
-                  is_state('humidifier.dehumidifier_suite', 'on') %}
+                  {% if is_state_attr('fan.entfeuchter_c4c4_fan', 'preset_mode',
+                  'High' ) and  is_state('humidifier.entfeuchter_c4c4', 'on') %}
                     white
                   {% else%}
                     
